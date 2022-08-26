@@ -2,6 +2,8 @@ import random
 import time
 import os
 
+from sympy import true
+
 
 def moveUp(puzzle, ind):
    if ind - 3 >= 0:
@@ -9,7 +11,6 @@ def moveUp(puzzle, ind):
       puzzle[ind - 3] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
-   return puzzle
 
 def moveDown(puzzle, ind):
    if ind + 3 < len(puzzle):
@@ -17,7 +18,6 @@ def moveDown(puzzle, ind):
       puzzle[ind + 3] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
-   return puzzle
 
 def moveLeft(puzzle, ind):
    if ind % 3 > 0:
@@ -25,7 +25,6 @@ def moveLeft(puzzle, ind):
       puzzle[ind - 1] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
-   return puzzle
 
 def moveRight(puzzle, ind):
    if ind % 3 < 2:
@@ -33,7 +32,6 @@ def moveRight(puzzle, ind):
       puzzle[ind + 1] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
-   return puzzle
 
 
 def shuffle(puzzle, ind):
@@ -135,8 +133,56 @@ def bidireccional(puzzle_original, puzzle):
    print(f"Elapsed time: {final-inicio} s")
 
 
-def anchura(puzzle):
-   pass
+def anchura(puzzle, solucion):
+   visitados = []
+   #temp = []
+   visitados.append(puzzle)
+   print(visitados)
+   movimientos = 0
+   i = -1
+   while True:
+      i += 1
+      print(i)
+      print(visitados)
+      puzzle = visitados[i]
+      ind = puzzle.index(0)
+      if ind - 3 >= 0:
+         puzzleU = moveUp(puzzle, ind)
+         movimientos += 1
+         if puzzleU == solucion:
+            print(f'Solucion encontrada en {movimientos} movimientos')
+            input("Press ENTER to continue...")
+            break
+         if puzzleU not in visitados:
+            visitados.append(puzzleU)
+      if ind + 3 < len(puzzle):
+         puzzleD = moveDown(puzzle, ind)
+         movimientos += 1
+         if puzzleD == solucion:
+            print(f'Solucion encontrada en {movimientos} movimientos')
+            input("Press ENTER to continue...")
+            break
+         if puzzleD not in visitados:
+            visitados.append(puzzleD)
+      if ind % 3 > 0:
+         puzzleL = moveLeft(puzzle, ind)
+         movimientos += 1
+         if puzzleL == solucion:
+            print(f'Solucion encontrada en {movimientos} movimientos')
+            input("Press ENTER to continue...")
+            break
+         if puzzleL not in visitados:
+            visitados.append(puzzleL)
+      if ind % 3 < 2:
+         puzzleR = moveRight(puzzle, ind)
+         movimientos += 1
+         if puzzleR == solucion:
+            print(f'Solucion encontrada en {movimientos} movimientos')
+            input("Press ENTER to continue...")
+            break
+         if puzzleR not in visitados:
+            visitados.append(puzzleR)
+      
 
 
 def main():
@@ -153,7 +199,7 @@ def main():
       elif selected == 2:
          bidireccional(puzzle_original, puzzle)
       elif selected == 3:
-         anchura(puzzle)
+         anchura(puzzle, solucion)
       elif selected == 4:
          break
       else:
