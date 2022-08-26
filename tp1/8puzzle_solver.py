@@ -134,54 +134,60 @@ def bidireccional(puzzle_original, puzzle):
 
 
 def anchura(puzzle, solucion):
-   visitados = []
+   visitados = [puzzle]
    #temp = []
-   visitados.append(puzzle)
    print(visitados)
    movimientos = 0
    i = -1
    while True:
       i += 1
+      if i == 5:
+         input("Press ENTER to continue...")
+         break
       print(i)
       print(visitados)
       puzzle = visitados[i]
       ind = puzzle.index(0)
       if ind - 3 >= 0:
          puzzleU = moveUp(puzzle, ind)
-         movimientos += 1
-         if puzzleU == solucion:
-            print(f'Solucion encontrada en {movimientos} movimientos')
-            input("Press ENTER to continue...")
-            break
-         if puzzleU not in visitados:
-            visitados.append(puzzleU)
+         print(f'arriba {puzzleU}')
+         # movimientos += 1
+         # if puzzleU == solucion:
+         #    print(f'Solucion encontrada en {movimientos} movimientos')
+         #    input("Press ENTER to continue...")
+         #    break
+         # if puzzleU not in visitados:
+         #    visitados.append(puzzleU)
       if ind + 3 < len(puzzle):
          puzzleD = moveDown(puzzle, ind)
-         movimientos += 1
-         if puzzleD == solucion:
-            print(f'Solucion encontrada en {movimientos} movimientos')
-            input("Press ENTER to continue...")
-            break
-         if puzzleD not in visitados:
-            visitados.append(puzzleD)
+         print(f'abajo {puzzleD}')
+         # movimientos += 1
+         # if puzzleD == solucion:
+         #    print(f'Solucion encontrada en {movimientos} movimientos')
+         #    input("Press ENTER to continue...")
+         #    break
+         # if puzzleD not in visitados:
+         #    visitados.append(puzzleD)
       if ind % 3 > 0:
          puzzleL = moveLeft(puzzle, ind)
-         movimientos += 1
-         if puzzleL == solucion:
-            print(f'Solucion encontrada en {movimientos} movimientos')
-            input("Press ENTER to continue...")
-            break
-         if puzzleL not in visitados:
-            visitados.append(puzzleL)
+         print(f'izquierda {puzzleL}')
+         # movimientos += 1
+         # if puzzleL == solucion:
+         #    print(f'Solucion encontrada en {movimientos} movimientos')
+         #    input("Press ENTER to continue...")
+         #    break
+         # if puzzleL not in visitados:
+         #    visitados.append(puzzleL)
       if ind % 3 < 2:
          puzzleR = moveRight(puzzle, ind)
-         movimientos += 1
-         if puzzleR == solucion:
-            print(f'Solucion encontrada en {movimientos} movimientos')
-            input("Press ENTER to continue...")
-            break
-         if puzzleR not in visitados:
-            visitados.append(puzzleR)
+         print(f'derecha {puzzleR}')
+         # movimientos += 1
+         # if puzzleR == solucion:
+         #    print(f'Solucion encontrada en {movimientos} movimientos')
+         #    input("Press ENTER to continue...")
+         #    break
+         # if puzzleR not in visitados:
+         #    visitados.append(puzzleR)
       
 
 
