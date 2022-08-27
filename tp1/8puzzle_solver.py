@@ -2,8 +2,8 @@ import random
 import time
 import os
 
-from sympy import true
 
+visitados = []
 
 def moveUp(puzzle, ind):
    if ind - 3 >= 0:
@@ -134,9 +134,8 @@ def bidireccional(puzzle_original, puzzle):
 
 
 def anchura(puzzle, solucion):
-   visitados = [puzzle]
    #temp = []
-   print(visitados)
+   visitados.append(puzzle)
    movimientos = 0
    i = -1
    while True:
@@ -146,11 +145,14 @@ def anchura(puzzle, solucion):
          break
       print(i)
       print(visitados)
-      puzzle = visitados[i]
+      #puzzle = visitados[i]
       ind = puzzle.index(0)
+      print(f"Index: {ind}")
       if ind - 3 >= 0:
-         puzzleU = moveUp(puzzle, ind)
+         puzzleU = moveUp(visitados[i], ind)
          print(f'arriba {puzzleU}')
+         print(f'visitados {visitados[i]}')
+         visitados.append(puzzleU)
          # movimientos += 1
          # if puzzleU == solucion:
          #    print(f'Solucion encontrada en {movimientos} movimientos')
@@ -158,9 +160,11 @@ def anchura(puzzle, solucion):
          #    break
          # if puzzleU not in visitados:
          #    visitados.append(puzzleU)
-      if ind + 3 < len(puzzle):
-         puzzleD = moveDown(puzzle, ind)
+      if ind + 3 < len(visitados[i]):
+         puzzleD = moveDown(visitados[i], ind)
          print(f'abajo {puzzleD}')
+         print(f'visitados {visitados[i]}')
+         visitados.append(puzzleD)
          # movimientos += 1
          # if puzzleD == solucion:
          #    print(f'Solucion encontrada en {movimientos} movimientos')
@@ -169,8 +173,9 @@ def anchura(puzzle, solucion):
          # if puzzleD not in visitados:
          #    visitados.append(puzzleD)
       if ind % 3 > 0:
-         puzzleL = moveLeft(puzzle, ind)
+         puzzleL = moveLeft(visitados[i], ind)
          print(f'izquierda {puzzleL}')
+         visitados.append(puzzleL)
          # movimientos += 1
          # if puzzleL == solucion:
          #    print(f'Solucion encontrada en {movimientos} movimientos')
@@ -179,8 +184,10 @@ def anchura(puzzle, solucion):
          # if puzzleL not in visitados:
          #    visitados.append(puzzleL)
       if ind % 3 < 2:
-         puzzleR = moveRight(puzzle, ind)
+         puzzleR = moveRight(visitados[i], ind)
          print(f'derecha {puzzleR}')
+         print(f'visitados {visitados[i]}')
+         visitados.append(puzzleR)
          # movimientos += 1
          # if puzzleR == solucion:
          #    print(f'Solucion encontrada en {movimientos} movimientos')

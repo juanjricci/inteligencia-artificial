@@ -5,6 +5,6 @@ i = -1
 while True:
     i += 1
     visitados.append(puzzle)
-    print(visitados)
+    print(f'Visitafos: {visitados}')
     if i == 5: 
         break
