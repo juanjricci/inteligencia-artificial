@@ -5,12 +5,14 @@ import os
 
 visitados = []
 
+
 def moveUp(puzzle, ind):
    if ind - 3 >= 0:
       aux = puzzle[ind - 3]
       puzzle[ind - 3] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
+
 
 def moveDown(puzzle, ind):
    if ind + 3 < len(puzzle):
@@ -19,12 +21,14 @@ def moveDown(puzzle, ind):
       puzzle[ind] = aux
       return puzzle
 
+
 def moveLeft(puzzle, ind):
    if ind % 3 > 0:
       aux = puzzle[ind - 1]
       puzzle[ind - 1] = puzzle[ind]
       puzzle[ind] = aux
       return puzzle
+
 
 def moveRight(puzzle, ind):
    if ind % 3 < 2:
@@ -35,42 +39,45 @@ def moveRight(puzzle, ind):
 
 
 def shuffle(puzzle, ind):
-   func_list = [0,1,2,3]
+   func_list = [0, 1, 2, 3]
    while True:
       selected_func = random.choice(func_list)
       if selected_func == 0:
          if ind - 3 >= 0:
-            puzzle = moveUp(puzzle, ind)
-            break
+               puzzle = moveUp(puzzle, ind)
+               break
       elif selected_func == 1:
          if ind + 3 < len(puzzle):
-            puzzle = moveDown(puzzle, ind)
-            break
+               puzzle = moveDown(puzzle, ind)
+               break
       elif selected_func == 2:
          if ind % 3 > 0:
-            puzzle = moveLeft(puzzle, ind)
-            break
+               puzzle = moveLeft(puzzle, ind)
+               break
       elif selected_func == 3:
          if ind % 3 < 2:
-            puzzle = moveRight(puzzle, ind)
-            break
+               puzzle = moveRight(puzzle, ind)
+               break
    return puzzle
 
 
 def menu(puzzle):
    os.system('clear')
    print("8-PUZZLE SOLVER")
-   print("---------------")
-   print(f"Estado del puzzle: {puzzle}")
-   print("---------------")
-   print("-----Menu------")
+   # if mezclado == True:
+   #    print("Se ha mezclado el puzzle con 50 movimientos")
+   print(f"Estado del puzzle: {puzzle}\n")
+   print("\t----------------")
+   print("\t      Menu      ")
+   print("\t----------------")
    print("\t0. Mezclar.")
    print("\t1. Busqueda Random.")
    print("\t2. Busqueda Bidireccional.")
    print("\t3. Busqueda por Anchura.")
-   print("\t4. Salir.")
+   print("\t4. Salir.\n")
    selected = int(input("Selecciona una opcion: "))
    return selected
+
 
 def mezclar(puzzle):
    # mezclo con 50 movimientos
@@ -78,7 +85,9 @@ def mezclar(puzzle):
       ind = puzzle.index(0)
       s_puzzle = shuffle(puzzle, ind)
       puzzle = s_puzzle
-   return puzzle
+   mezclado = True
+   return puzzle, mezclado
+
 
 def random_solver(puzzle, solucion):
    # inicio el conteo de tiempo
@@ -96,7 +105,7 @@ def random_solver(puzzle, solucion):
          print(f'Solucion encontrada en {movimientos} movimientos')
          print(f'Estado final: {puzzle}')
          break
-   
+
    # finalizo e imprimo el tiempo de ejecucion
    final = time.time()
    print(f"Elapsed time: {final-inicio} s")
@@ -134,68 +143,52 @@ def bidireccional(puzzle_original, puzzle):
 
 
 def anchura(puzzle, solucion):
+   inicio = time.time()
    #temp = []
    visitados.append(puzzle)
+   print(visitados)
    movimientos = 0
    i = -1
-   while True:
+   while 1:
       i += 1
-      if i == 5:
-         input("Press ENTER to continue...")
-         break
-      print(i)
-      print(visitados)
-      #puzzle = visitados[i]
-      ind = puzzle.index(0)
-      print(f"Index: {ind}")
-      if ind - 3 >= 0:
-         puzzleU = moveUp(visitados[i], ind)
-         print(f'arriba {puzzleU}')
-         print(f'visitados {visitados[i]}')
+         # if i == 5:
+         #    input("Press ENTER to continue...")
+         #    break
+      temp = visitados[i].copy()
+      ind = temp.index(0)
+      print(f"Moviendo en el nodo {temp}")
+      puzzleU = moveUp(temp.copy(), ind)
+      if puzzleU is not None and puzzleU not in visitados:
+         print(puzzleU)
          visitados.append(puzzleU)
-         # movimientos += 1
-         # if puzzleU == solucion:
-         #    print(f'Solucion encontrada en {movimientos} movimientos')
-         #    input("Press ENTER to continue...")
-         #    break
-         # if puzzleU not in visitados:
-         #    visitados.append(puzzleU)
-      if ind + 3 < len(visitados[i]):
-         puzzleD = moveDown(visitados[i], ind)
-         print(f'abajo {puzzleD}')
-         print(f'visitados {visitados[i]}')
+         movimientos += 1
+         if puzzleU == solucion:
+            break
+      puzzleD = moveDown(temp.copy(), ind)
+      if puzzleD is not None and puzzleD not in visitados:
+         print(puzzleD)
          visitados.append(puzzleD)
-         # movimientos += 1
-         # if puzzleD == solucion:
-         #    print(f'Solucion encontrada en {movimientos} movimientos')
-         #    input("Press ENTER to continue...")
-         #    break
-         # if puzzleD not in visitados:
-         #    visitados.append(puzzleD)
-      if ind % 3 > 0:
-         puzzleL = moveLeft(visitados[i], ind)
-         print(f'izquierda {puzzleL}')
+         movimientos += 1
+         if puzzleD == solucion:
+            break
+      puzzleL = moveLeft(temp.copy(), ind)
+      if puzzleL is not None and puzzleL not in visitados:
+         print(puzzleL)
          visitados.append(puzzleL)
-         # movimientos += 1
-         # if puzzleL == solucion:
-         #    print(f'Solucion encontrada en {movimientos} movimientos')
-         #    input("Press ENTER to continue...")
-         #    break
-         # if puzzleL not in visitados:
-         #    visitados.append(puzzleL)
-      if ind % 3 < 2:
-         puzzleR = moveRight(visitados[i], ind)
-         print(f'derecha {puzzleR}')
-         print(f'visitados {visitados[i]}')
+         movimientos += 1
+         if puzzleL == solucion:
+            break
+      puzzleR = moveRight(temp.copy(), ind)
+      if puzzleR is not None and puzzleR not in visitados:
+         print(puzzleR)
          visitados.append(puzzleR)
-         # movimientos += 1
-         # if puzzleR == solucion:
-         #    print(f'Solucion encontrada en {movimientos} movimientos')
-         #    input("Press ENTER to continue...")
-         #    break
-         # if puzzleR not in visitados:
-         #    visitados.append(puzzleR)
-      
+         movimientos += 1
+         if puzzleR == solucion:
+            break
+   print(f"Solucion encontrada en {movimientos} movimientos.")
+   final = time.time()
+   print(f"Elapsed time: {final-inicio} s")
+   input("Press ENTER to continue...")
 
 
 def main():
@@ -206,7 +199,7 @@ def main():
    while True:
       selected = menu(puzzle)
       if selected == 0:
-         puzzle = mezclar(puzzle)
+         puzzle, mezclado = mezclar(puzzle)
       elif selected == 1:
          random_solver(puzzle, solucion)
       elif selected == 2:
@@ -221,4 +214,4 @@ def main():
 
 if __name__ == '__main__':
 
-   main()
+    main()
