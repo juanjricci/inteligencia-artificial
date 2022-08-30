@@ -5,7 +5,6 @@ import os
 
 visitados = []
 
-
 def moveUp(puzzle, ind):
    if ind - 3 >= 0:
       aux = puzzle[ind - 3]
@@ -85,8 +84,7 @@ def mezclar(puzzle):
       ind = puzzle.index(0)
       s_puzzle = shuffle(puzzle, ind)
       puzzle = s_puzzle
-   mezclado = True
-   return puzzle, mezclado
+   return puzzle
 
 
 def random_solver(puzzle, solucion):
@@ -199,7 +197,7 @@ def main():
    while True:
       selected = menu(puzzle)
       if selected == 0:
-         puzzle, mezclado = mezclar(puzzle)
+         puzzle = mezclar(puzzle)
       elif selected == 1:
          random_solver(puzzle, solucion)
       elif selected == 2:
