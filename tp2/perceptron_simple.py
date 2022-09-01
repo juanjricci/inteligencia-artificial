@@ -2,18 +2,26 @@ import random
 import math
 
 
+print("\nPERCEPTRON SIMPLE")
+print("-----------------")
+print("Como desea que se comporte el perceptron? ")
+print("\t1. Compuerta OR.\n\t2. Compuerta AND.")
+selected = int(input("Ingrese la opcion deseada: "))
+
 e0 = 1
 # tabla logica
 e1 = [0, 0, 1, 1]
 e2 = [0, 1, 0, 1]
-s = [0 ,1 ,1, 1]
+if selected == 1:
+    s = [0 ,1 ,1, 1]
+elif selected == 2:
+    s = [0 ,0 ,0, 1]
 
 # pesos sinopticos
 w0 = random.uniform(-1, 1)
 w1 = random.uniform(-1, 1)
 w2 = random.uniform(-1, 1)
-print("\nPerceptron Simple")
-print("-----------------")
+
 print(f"\nPesos sinopticos iniciales")
 print(f"w0 = {w0}")
 print(f"w1 = {w1}")
