@@ -50,7 +50,7 @@ learning_rate = 0.1
 while learning == True:
     #print(f"Iteracion #{i} ---> {w0}/{w1}/{w2}")
     i += 1
-    print(f"Iteracion {i}")
+    # print(f"Iteracion {i}")
     learning = False
     lista_iteraciones.append(i)
     lista_pesos0.append(w0)
@@ -60,7 +60,7 @@ while learning == True:
     # if i == 5:
     #     break
     for cont in range(4):
-        print(f"Renglon {cont}")
+        # print(f"Renglon {cont}")
         #print(f"e1 = {e1[cont]} -- e2 = {e2[cont]} -- s = {s[cont]}")
         x = e0*w0 + e1[cont]*w1 + e2[cont]*w2
         #print(f"x = {x}")
@@ -85,11 +85,11 @@ while learning == True:
             #print(f"dw2 = {dw2}")
             # nuevos pesos sinopticos
             w0 = w0 + dw0
-            print(f"w0 = {w0}")
+            # print(f"w0 = {w0}")
             w1 = w1 + dw1
-            print(f"w1 = {w1}")
+            # print(f"w1 = {w1}")
             w2 = w2 + dw2
-            print(f"w2 = {w2}")
+            # print(f"w2 = {w2}")
     # if i == 2:
     #     break
 
