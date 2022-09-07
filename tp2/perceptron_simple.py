@@ -28,6 +28,11 @@ if selected == 1:
 elif selected == 2:
     s = [0 ,0 ,0, 1]
 
+error0 = 1
+error1 = 1
+error2 = 1
+error3 = 1
+
 # pesos sinopticos
 w0 = random.uniform(-1, 1)
 w1 = random.uniform(-1, 1)
@@ -70,7 +75,7 @@ while learning == True:
         exec(f'error{cont} = error')
         exec(f'lista_error{cont}.append(error{cont})')
 
-        if abs(error) > 0.1:
+        if abs(error0) > 0.1 or abs(error1) > 0.1 or abs(error2) > 0.1 or abs(error3) > 0.1:
 
             learning = True
 
@@ -90,6 +95,7 @@ while learning == True:
             # print(f"w1 = {w1}")
             w2 = w2 + dw2
             # print(f"w2 = {w2}")
+            
     # if i == 2:
     #     break
 
@@ -116,6 +122,10 @@ for cont in range(0,4):
 
 # Menu para graficar
 while True:
+    # print(f"Error1: {error0}")
+    # print(f"Error2: {error1}")
+    # print(f"Error3: {error2}")
+    # print(f"Error4: {error3}")
     print("Que desea graficar?\n")
     print("\t1. Grafico de errores.")
     print("\t2. Grafico de pesos sinopticos.")
