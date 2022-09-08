@@ -35,9 +35,9 @@ def calcular_y(x):
     return(1/(1 + math.exp(-x)))
 
 def main():
-    e1 = 0
-    e2 = 0
-    sd = 0
+    e1 = [0, 0, 1, 1]
+    e2 = [0, 1, 0, 1]
+    sd = [0, 1, 1, 0]
 
     v = 1
 
@@ -61,23 +61,25 @@ def main():
     w17 = 0.31
     w18 = -0.32
 
-    # cantidad de neuronas en capa de entrada
-    ne = 2
-    # cantidad de neuronas en capa oculta
-    no = 3
+    for cont in range(4):
+        # cantidad de neuronas en capa de entrada
+        ne = 2
+        # cantidad de neuronas en capa oculta
+        no = 3
 
-    y_n0, y_n1 = calculos_entradas(ne, v, e1, e2, w0, w1, w2, w3, w4, w5)
+        
+        y_n0, y_n1 = calculos_entradas(ne, v, e1[cont], e2[cont], w0, w1, w2, w3, w4, w5)
 
-    y_n2, y_n3, y_n4 = calculos_ocultas(no, v, y_n0, y_n1, w6, w7, w8, w9, w10, w11, w12, w13, w14)
+        y_n2, y_n3, y_n4 = calculos_ocultas(no, v, y_n0, y_n1, w6, w7, w8, w9, w10, w11, w12, w13, w14)
 
-    x = calcular_x(v, y_n2, y_n3, w15, w16, w17, y_n4, w18)
-    y = calcular_y(x)
+        x = calcular_x(v, y_n2, y_n3, w15, w16, w17, y_n4, w18)
+        y = calcular_y(x)
 
-    print(f"La salida real para e1 = 0 y e2 = 0 es {y}")
+        print(f"La salida real para e1 = {e1[cont]} y e2 = {e2[cont]} es {y}")
 
-    error = sd - y
+        error = sd[cont] - y
 
-    print(f"El error es {error}")
+        print(f"El error es {error}")
 
 if __name__ == '__main__':
     main()
