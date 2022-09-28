@@ -35,7 +35,7 @@ def main():
 
     v = 1
 
-    lr = 0.5
+    lr = 0.1
 
     errores1 = []
     errores2 = []
@@ -43,7 +43,6 @@ def main():
     errores4 = []
 
     lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []]
-    
 
     limite_iteraciones = 10000
 
@@ -89,39 +88,33 @@ def main():
 
             delta_f = calcular_delta_f(y, error) 
             # con esto obtengo el delta_f
-            #print("delta_f = ", delta_f)
 
             for entrada in entradas: # entradas = [1, salida1, salida2, salida3]
                 delta_w = lr * entrada * delta_f
                 deltas_pesos_finales.append(delta_w)
             # con esto obtengo [dw9, dw10, dw11, dw12]
-            #print("deltas_finales = ", deltas_pesos_finales)
 
             for salida in salidas: # salidas = [salida1, salida2, salida3]
                 deltas_ocultas.append(salida * (1 - salida) * delta_f)
             # con esto obtengo [delta_oc1, delta_oc2, delta_oc3]
-            #print("deltas_ocultas = ", deltas_ocultas)
 
             entradas = [v, e1[cont], e2[cont]]
             for delta_oculta in deltas_ocultas:
                 for entrada in entradas:
                     deltas.append(lr * entrada * delta_oculta)
             # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8]
-            #print("deltas = ", deltas)
 
             for element in deltas_pesos_finales:
                 deltas.append(element)
             # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8, dw9, dw10, dw11, dw12]
-            #print("todas_las_deltas = ", deltas)
 
             for i, delta in enumerate(deltas):
                 if len(lista_pesos[i]) < limite_iteraciones:
                     lista_pesos[i].append(pesos[i])
                 pesos[i] = pesos[i] + delta
             # con esto obtengo los nuevos valores de los pesos
-            #print("pesos_cambiados = ", pesos)
 
-            # hago una copia de los nuevo pesos para poder manejarla
+            # hago una copia de los nuevos pesos para poder manejarla
             w = pesos.copy()
 
             iteraciones += 1
@@ -139,10 +132,6 @@ def main():
         lista_iteraciones.append(i)
 
     while True:
-        # print(f"Error1: {error0}")
-        # print(f"Error2: {error1}")
-        # print(f"Error3: {error2}")
-        # print(f"Error4: {error3}")
         print("Que desea graficar?\n")
         print("\t1. Grafico de errores.")
         print("\t2. Grafico de pesos sinopticos.")
