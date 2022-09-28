@@ -35,6 +35,8 @@ def main():
 
     v = 1
 
+    lr = 0.5
+
     errores1 = []
     errores2 = []
     errores3 = []
@@ -90,7 +92,7 @@ def main():
             #print("delta_f = ", delta_f)
 
             for entrada in entradas: # entradas = [1, salida1, salida2, salida3]
-                delta_w = 0.1 * entrada * delta_f
+                delta_w = lr * entrada * delta_f
                 deltas_pesos_finales.append(delta_w)
             # con esto obtengo [dw9, dw10, dw11, dw12]
             #print("deltas_finales = ", deltas_pesos_finales)
@@ -103,7 +105,7 @@ def main():
             entradas = [v, e1[cont], e2[cont]]
             for delta_oculta in deltas_ocultas:
                 for entrada in entradas:
-                    deltas.append(0.1 * entrada * delta_oculta)
+                    deltas.append(lr * entrada * delta_oculta)
             # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8]
             #print("deltas = ", deltas)
 
@@ -144,7 +146,8 @@ def main():
         print("Que desea graficar?\n")
         print("\t1. Grafico de errores.")
         print("\t2. Grafico de pesos sinopticos.")
-        print("\t3. Salir.")
+        print("\t3. Graficar ambos.")
+        print("\t4. Salir.")
         selected = int(input("Ingrese la opcion deseada: "))
         if selected == 1:
             plt.xlabel("Iteraciones")
@@ -165,6 +168,25 @@ def main():
                 plt.plot(lista_iteraciones, element)
             plt.show()
         elif selected == 3:
+            plt.figure(figsize=(15,5))
+            plt.subplot(1, 2, 1)
+            plt.xlabel("Iteraciones")
+            plt.ylabel("Errores")
+            plt.title("GRÁFICO DE ERRORES")
+            plt.axhline(y=0, color='black', linestyle='-')
+            plt.plot(lista_iteraciones, errores1)
+            plt.plot(lista_iteraciones, errores2)
+            plt.plot(lista_iteraciones, errores3)
+            plt.plot(lista_iteraciones, errores4)
+            plt.subplot(1, 2, 2)
+            plt.xlabel("Iteraciones")
+            plt.ylabel("Pesos")
+            plt.title("GRÁFICO DE PESOS")
+            plt.axhline(y=0, color='black', linestyle='-')
+            for element in lista_pesos:
+                plt.plot(lista_iteraciones, element)
+            plt.show()
+        elif selected == 4:
             break
         else:
             print("Ingrese una opcion valida.")
