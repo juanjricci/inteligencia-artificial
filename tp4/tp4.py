@@ -1,3 +1,4 @@
+from cProfile import label
 import math
 import matplotlib.pyplot as plt
 
@@ -167,15 +168,17 @@ def main():
             plt.title("GRÁFICO DE ERRORES")
             plt.axhline(y=0, color='black', linestyle='-')
             for cont in range(4):
-                plt.plot(lista_iteraciones, errores[cont])
+                plt.plot(lista_iteraciones, errores[cont], label=f"error{cont}")
+            plt.legend()
             plt.show()
         elif selected == 2:
             plt.xlabel("Iteraciones")
             plt.ylabel("Pesos")
             plt.title("GRÁFICO DE PESOS")
             plt.axhline(y=0, color='black', linestyle='-')
-            for element in lista_pesos:
-                plt.plot(lista_iteraciones, element)
+            for i, element in enumerate(lista_pesos):
+                plt.plot(lista_iteraciones, element, label=f"w{i}")
+            plt.legend()
             plt.show()
         elif selected == 3:
             plt.figure(figsize=(15,5))
@@ -185,14 +188,16 @@ def main():
             plt.title("GRÁFICO DE ERRORES")
             plt.axhline(y=0, color='black', linestyle='-')
             for cont in range(4):
-                plt.plot(lista_iteraciones, errores[cont])
+                plt.plot(lista_iteraciones, errores[cont], label=f"error{cont}")
+            plt.legend()
             plt.subplot(1, 2, 2)
             plt.xlabel("Iteraciones")
             plt.ylabel("Pesos")
             plt.title("GRÁFICO DE PESOS")
             plt.axhline(y=0, color='black', linestyle='-')
-            for element in lista_pesos:
-                plt.plot(lista_iteraciones, element)
+            for i, element in enumerate(lista_pesos):
+                plt.plot(lista_iteraciones, element, label=f"w{i}")
+            plt.legend()
             plt.show()
         elif selected == 4:
             break
