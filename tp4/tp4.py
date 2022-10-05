@@ -1,10 +1,9 @@
-from cProfile import label
 import math
 import matplotlib.pyplot as plt
 
 # calculos en la capa oculta
 def calculos_ocultas(no, entradas, w, salidas):
-    for n in range(no):
+    for _ in range(no):
         x = calcular_x(entradas, w)
         y = calcular_y(x)
         salidas.append(y)
@@ -14,7 +13,8 @@ def calcular_x(entradas, w):
     x = 0
     for entrada in entradas:
         x += entrada*w[0]
-        w.remove(w[0]) # voy removiendo para no tener que ir recorriendo la lista cambiando el indice
+        w.remove(w[0]) 
+        # voy removiendo para no tener que ir recorriendo la lista cambiando el indice
     return x
 
 # funcion para calcular y
@@ -29,45 +29,66 @@ def calcular_error(sd, y):
 def calcular_delta_f(salida, delta):
     return(salida * (1 - salida) * delta)
 
+def menu(e1, e2, sd, bias, pesos, no):
+    print("\nTP4 - PERCEPTRON MULTICAPA CON BACK PROPAGATION PARA LA LOGICA XOR")
+    print("-----------------------------------------------------------------")
+    print("Tabla logica: ")
+    print("\t| e1 | e2 | s |")
+    print("\t---------------")
+    for n in range(4):
+        print(f"\t| {e1[n]}  | {e2[n]}  | {sd[n]} |")
+    print(f"\nbias = {bias}")
+    print(f"\nnumero de neuronas en la capa oculta = {no}")
+    print("\nPesos sinopticos: ")
+    for i, peso in enumerate(pesos):
+        print(f"\tw{i} = {peso}")
+
 def main():
+
     e1 = [0, 0, 1, 1]
     e2 = [0, 1, 0, 1]
     sd = [0, 1, 1, 0]
 
-    v = 1
+    bias = 1
 
-    lr = 0.1
+    no = 3 # 4 --> prueba con una neurona mas (funciona)
 
-    errores1 = []
-    errores2 = []
-    errores3 = []
-    errores4 = []
+    # aca se van a ir almacenando los errores en 4 listas distintas
+    errores = [[], [], [], []]
 
-    pesos = [0.9, 0.7, 0.5, 0.3, -0.9, -1, 0.8, 0.35, 0.1, -0.23, -0.79, 0.56, 0.6]
+    #        w0   w1   w2   w3   w4   w5   w6    w7   w8    w9     w10   w11   w12
+    pesos = [0.9, 0.7, 0.5, 0.3, -0.9, -1, 0.8, 0.35, 0.1, -0.23, -0.79, 0.56, 0.6] #, -0.5, 0.2, -0.1, 0.15] --> prueba con una neurona mas (funciona)
 
-    lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []]
+    # aca se va a ir almacenando una lista por cada peso sinoptico
+    #              w0  w1  w2  w3  w4  w5  w6  w7  w8  w9 w10 w11 w12
+    lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []] #, [], [], [], []] --> prueba con una neurona mas (funciona)
 
-    limite_iteraciones = 40000
+    menu(e1, e2, sd, bias, pesos, no)
 
-    no = 3
+    lr = float(input("\n¿Que tasa de aprendizaje (learning rate) desea? --> "))
+
+    limite_iteraciones = int(input("\n¿Cuántas iteraciones desea realizar? --> "))
+
     iteraciones = 0
+
+    # copio los elementos de la lista sd pero van a ir cambiando por las salidas reales apenas se realice su calculo
+    salidas_reales = sd.copy()
 
     while True:
 
         iteraciones += 1
 
+        # voy agregando los pesos a su lista correspondiente. ej: w0 se almacena en lista_pesos[0] 
         for i, peso in enumerate(pesos):
             lista_pesos[i].append(peso)
 
         for cont in range(4):
-            
-            learning = True
 
             # hago una copia de los pesos para poder manejarla sin modificar la original
             w = pesos.copy()
 
             # while True:
-            entradas = [v, e1[cont], e2[cont]]
+            entradas = [bias, e1[cont], e2[cont]]
             salidas = [] # esto va a almacenar las salidas de la capa oculta
             deltas_pesos_finales = [] # esto va a almacenar dw9, dw10, dw11 y dw12
             deltas = [] # esto va a almacenar desde dw0 hasta dw8 y posteriormente todas las dw
@@ -76,7 +97,7 @@ def main():
             calculos_ocultas(no, entradas, w, salidas)
             # con esto hago los calculos de las neuronas ocultas y guardo las salidas en una lista
 
-            entradas = [v]
+            entradas = [bias]
             for element in salidas:
                 entradas.append(element)
             # esto me deja entradas = [v, salida1, salida2, salida3]
@@ -87,14 +108,9 @@ def main():
 
             # calculo el error
             error = calcular_error(sd[cont], y)
-            if cont == 0:
-                errores1.append(error)
-            elif cont == 1:
-                errores2.append(error)
-            elif cont == 2:
-                errores3.append(error)
-            elif cont == 3:
-                errores4.append(error)
+            # agrego el error a su lista correspondiente al igual que la salida
+            errores[cont].append(error)
+            salidas_reales[cont] = y
 
             delta_f = calcular_delta_f(y, error) 
             # con esto obtengo el delta_f
@@ -108,7 +124,7 @@ def main():
                 deltas_ocultas.append(salida * (1 - salida) * delta_f)
             # con esto obtengo [delta_oc1, delta_oc2, delta_oc3]
 
-            entradas = [v, e1[cont], e2[cont]]
+            entradas = [bias, e1[cont], e2[cont]]
             for delta_oculta in deltas_ocultas:
                 for entrada in entradas:
                     deltas.append(lr * entrada * delta_oculta)
@@ -119,50 +135,39 @@ def main():
             # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8, dw9, dw10, dw11, dw12]
 
             for i, delta in enumerate(deltas):
-                # if len(lista_pesos[i]) < limite_iteraciones:
-                #     lista_pesos[i].append(pesos[i])
                 pesos[i] = pesos[i] + delta
             # con esto obtengo los nuevos valores de los pesos
 
             # hago una copia de los nuevos pesos para poder manejarla
             w = pesos.copy()
-
-            # iteraciones += 1
-            # if iteraciones == limite_iteraciones:
-            #     learning = False
-            #     print("Iteraciones = ", iteraciones)
             
         if iteraciones == limite_iteraciones:
             break
-        # if learning == False:
-        #     break
-
-    print(f"Salida real para la e1 = {e1[cont]}, e2 = {e2[cont]} y sd = {sd[cont]} despues de {iteraciones} iteraciones: {y}")
-    print(f"El error es: {error}")
-    print("---------------------------------------------------------------------------------")
     
-    print("cantidad de pesos: " ,len(lista_pesos[0]))
+    print(f"\nResultados despues de {iteraciones} iteraciones:\n")
+    print("\t| e1 | e2 | salida |  error ")
+    print("\t------------------------------")
+    for cont in range(4):
+        print(f"\t| {e1[cont]}  | {e2[cont]}  | {round(salidas_reales[cont], 4)} | {round(errores[cont][-1], 4)} ")
     
     lista_iteraciones = []
     for i in range(limite_iteraciones):
         lista_iteraciones.append(i)
 
     while True:
-        print("Que desea graficar?\n")
+        print("\nQue desea graficar?\n")
         print("\t1. Grafico de errores.")
         print("\t2. Grafico de pesos sinopticos.")
         print("\t3. Graficar ambos.")
         print("\t4. Salir.")
-        selected = int(input("Ingrese la opcion deseada: "))
+        selected = int(input("\tIngrese la opcion deseada: "))
         if selected == 1:
             plt.xlabel("Iteraciones")
             plt.ylabel("Errores")
             plt.title("GRÁFICO DE ERRORES")
             plt.axhline(y=0, color='black', linestyle='-')
-            plt.plot(lista_iteraciones, errores1, label='error 1')
-            plt.plot(lista_iteraciones, errores2, label='error 2')
-            plt.plot(lista_iteraciones, errores3, label='error 3')
-            plt.plot(lista_iteraciones, errores4, label='error 4')
+            for cont in range(4):
+                plt.plot(lista_iteraciones, errores[cont])
             plt.show()
         elif selected == 2:
             plt.xlabel("Iteraciones")
@@ -179,10 +184,8 @@ def main():
             plt.ylabel("Errores")
             plt.title("GRÁFICO DE ERRORES")
             plt.axhline(y=0, color='black', linestyle='-')
-            plt.plot(lista_iteraciones, errores1)
-            plt.plot(lista_iteraciones, errores2)
-            plt.plot(lista_iteraciones, errores3)
-            plt.plot(lista_iteraciones, errores4)
+            for cont in range(4):
+                plt.plot(lista_iteraciones, errores[cont])
             plt.subplot(1, 2, 2)
             plt.xlabel("Iteraciones")
             plt.ylabel("Pesos")
