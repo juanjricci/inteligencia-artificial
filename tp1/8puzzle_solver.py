@@ -37,26 +37,27 @@ def moveRight(puzzle, ind):
       return puzzle
 
 
-def shuffle(puzzle, ind):
+def shuffle(puzzle):
    func_list = [0, 1, 2, 3]
-   while True:
-      selected_func = random.choice(func_list)
-      if selected_func == 0:
-         if ind - 3 >= 0:
-               puzzle = moveUp(puzzle, ind)
-               break
-      elif selected_func == 1:
-         if ind + 3 < len(puzzle):
-               puzzle = moveDown(puzzle, ind)
-               break
-      elif selected_func == 2:
-         if ind % 3 > 0:
-               puzzle = moveLeft(puzzle, ind)
-               break
-      elif selected_func == 3:
-         if ind % 3 < 2:
-               puzzle = moveRight(puzzle, ind)
-               break
+   # while True:
+   ind = puzzle.index(0)
+   selected_func = random.choice(func_list)
+   if selected_func == 0:
+      if ind - 3 >= 0:
+            puzzle = moveUp(puzzle, ind)
+            # break
+   elif selected_func == 1:
+      if ind + 3 < len(puzzle):
+            puzzle = moveDown(puzzle, ind)
+            # break
+   elif selected_func == 2:
+      if ind % 3 > 0:
+            puzzle = moveLeft(puzzle, ind)
+            # break
+   elif selected_func == 3:
+      if ind % 3 < 2:
+            puzzle = moveRight(puzzle, ind)
+            # break
    return puzzle
 
 
@@ -78,15 +79,6 @@ def menu(puzzle):
    return selected
 
 
-def mezclar(puzzle):
-   # mezclo con 50 movimientos
-   for _ in range(50):
-      ind = puzzle.index(0)
-      s_puzzle = shuffle(puzzle, ind)
-      puzzle = s_puzzle
-   return puzzle
-
-
 def random_solver(puzzle, solucion):
    # inicio el conteo de tiempo
    inicio = time.time()
@@ -95,8 +87,8 @@ def random_solver(puzzle, solucion):
    print(f'Estado inicial: {puzzle}')
    movimientos = 0
    while True:
-      ind = puzzle.index(0)
-      s_puzzle = shuffle(puzzle, ind)
+      # ind = puzzle.index(0)
+      s_puzzle = shuffle(puzzle)
       puzzle = s_puzzle
       movimientos += 1
       if puzzle == solucion:
@@ -121,10 +113,10 @@ def bidireccional(puzzle_original, puzzle):
    print(f'Estado inicial: {puzzle}')
    movimientos = 0
    while True:
-      ind_o = puzzle_original.index(0)
-      ind = puzzle.index(0)
-      o_puzzle = shuffle(puzzle_original, ind_o)
-      s_puzzle = shuffle(puzzle, ind)
+      # ind_o = puzzle_original.index(0)
+      # ind = puzzle.index(0)
+      o_puzzle = shuffle(puzzle_original)
+      s_puzzle = shuffle(puzzle)
       puzzle_original = o_puzzle
       puzzle = s_puzzle
       movimientos += 1
@@ -197,7 +189,8 @@ def main():
    while True:
       selected = menu(puzzle)
       if selected == 0:
-         puzzle = mezclar(puzzle)
+         for i in range(50):
+            puzzle = shuffle(puzzle)
       elif selected == 1:
          random_solver(puzzle, solucion)
       elif selected == 2:
