@@ -1,6 +1,7 @@
-from cProfile import label
+import random
 import math
 import matplotlib.pyplot as plt
+import time
 
 # calculos en la capa oculta
 def calculos_ocultas(no, entradas, w, salidas):
@@ -14,7 +15,7 @@ def calcular_x(entradas, w):
     x = 0
     for entrada in entradas:
         x += entrada*w[0]
-        w.remove(w[0]) 
+        w.remove(w[0])
         # voy removiendo para no tener que ir recorriendo la lista cambiando el indice
     return x
 
@@ -52,23 +53,35 @@ def main():
 
     bias = 1
 
-    no = 3 # 4 --> prueba con una neurona mas (funciona)
+    #no = 3# 4 --> prueba con una neurona mas (funciona)
+
+    no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
+    cantidad_pesos = math.trunc((no * 13)/3)
 
     # aca se van a ir almacenando los errores en 4 listas distintas
     errores = [[], [], [], []]
 
     #        w0   w1   w2   w3   w4   w5   w6    w7   w8    w9     w10   w11   w12
-    pesos = [0.9, 0.7, 0.5, 0.3, -0.9, -1, 0.8, 0.35, 0.1, -0.23, -0.79, 0.56, 0.6] #, -0.5, 0.2, -0.1, 0.15] --> prueba con una neurona mas (funciona)
+    #pesos = [0.9, 0.7, 0.5, 0.3, -0.9, -1, 0.8, 0.35, 0.1, -0.23, -0.79, 0.56, 0.6] #, -0.5, 0.2, -0.1, 0.15] #--> prueba con una neurona mas (funciona)
+    pesos = []
+    for i in range(cantidad_pesos):
+        pesos.append(random.uniform(1,-1))
 
     # aca se va a ir almacenando una lista por cada peso sinoptico
     #              w0  w1  w2  w3  w4  w5  w6  w7  w8  w9 w10 w11 w12
-    lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []] #, [], [], [], []] --> prueba con una neurona mas (funciona)
+    #lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []]# , [], [], [], []] #--> prueba con una neurona mas (funciona)
+    lista_pesos = []
+    for i in range(cantidad_pesos):
+        lista_pesos.append([])
+
 
     menu(e1, e2, sd, bias, pesos, no)
 
     lr = float(input("\n¿Que tasa de aprendizaje (learning rate) desea? --> "))
 
     limite_iteraciones = int(input("\n¿Cuántas iteraciones desea realizar? --> "))
+
+    inicio = time.time()
 
     iteraciones = 0
 
@@ -143,6 +156,8 @@ def main():
             w = pesos.copy()
             
         if iteraciones == limite_iteraciones:
+            final = time.time()
+            print(f"Elapsed time: {final-inicio} s")
             break
     
     print(f"\nResultados despues de {iteraciones} iteraciones:\n")
