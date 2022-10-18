@@ -183,7 +183,7 @@ def anchura(puzzle, solucion):
 
 def main():
    puzzle = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-   puzzle_original = puzzle
+   puzzle_original = puzzle.copy()
    solucion = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
    while True:
