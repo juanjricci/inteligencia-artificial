@@ -20,12 +20,8 @@ def main():
             imgarray.append(img[i, j][0])
 
     bias = 1
-
-    entradas = [bias]
-    for element in imgarray:
-        entradas.append(element)
-
-    print(len(entradas))
+    sd = 0
+    lr = 0.5
 
     no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
     cantidad_pesos = ((len(imgarray) + 1) * no) + (no + 1)
@@ -34,36 +30,105 @@ def main():
     for i in range(cantidad_pesos):
         pesos.append(random.uniform(0.001,-0.001))
 
-    print(len(pesos))
+    # print(f"Cantidad de pesos: {len(pesos)}")
+    # input("ENTER...")
 
-    w = pesos.copy()
+    iter = 0
 
-    salidas = []
+    while True:
 
-    for _ in range(no):
+        iter += 1
+        if iter == 1000:
+            break
 
-        x = 0
+        print(f"Iteracion --> {iter}")
 
-        for element in entradas:
+        w = pesos.copy()
+
+        salidas = []
+        deltas_pesos_finales = []
+        deltas_ocultas = []
+        deltas = []
+
+        entradas = [bias]
+        for element in imgarray:
+            entradas.append(element)
+
+        for _ in range(no):
+
+            x = 0
+
+            for element in entradas:
+                x += element * w[0]
+                w.remove(w[0])
+
+            y = 1/(1 + math.exp(-x))
+
+            salidas.append(y)
+            # print(f"Cantidad de pesos restantes: {len(w)}")
+
+        entradas_temp = [bias]
+        for s in salidas:
+            entradas_temp.append(s)
+
+        for element in entradas_temp:
             x += element * w[0]
             w.remove(w[0])
 
         y = 1/(1 + math.exp(-x))
+        print(f"Salida real = {y}")
 
-        salidas.append(y)
-        print(f"Cantidad de pesos restantes: {len(w)}")
+        # calculo el error
+        error = sd - y
+        print(f"El error es {error}")
+        # agrego el error a su lista correspondiente al igual que la salida
+        #errores[cont].append(error)
+        #salidas_reales[cont] = y
 
-    entradas = [bias]
-    for s in salidas:
-        entradas.append(s)
-        print(entradas)
+        delta_f = y * (1 - y) * error
+        # con esto obtengo el delta_f
 
-    for element in entradas:
-        x += element * w[0]
-        w.remove(w[0])
+        for entrada in entradas_temp: # entradas = [1, salida1, salida2, salida3]
+            delta_w = lr * entrada * delta_f
+            deltas_pesos_finales.append(delta_w)
+        # con esto obtengo [dw9, dw10, dw11, dw12]
+        # print(f"Aca ldeltas finales son: {deltas_pesos_finales}")
+        # print(f"Cantidad deltas pesos finales: {len(deltas_pesos_finales)}")
+        # input("ENTER...")
 
-    y = 1/(1 + math.exp(-x))
-    print(f"Salida real = {y}")        
+
+        # print(f"Cantidad de salidas: {len(salidas)}")
+        # input("ENTER...")
+
+        for salida in salidas: # salidas = [salida1, salida2, salida3]
+            deltas_ocultas.append(salida * (1 - salida) * delta_f)
+        # con esto obtengo [delta_oc1, delta_oc2, delta_oc3]
+
+        # print(f"Aca las deltas ocultas son: {deltas_ocultas}")
+        # print(f"Cantidad deltas ocultas: {len(deltas_ocultas)}")
+        # input("ENTER...")
+
+        for delta_oculta in deltas_ocultas:
+            for entrada in entradas:
+                deltas.append(lr * entrada * delta_oculta)
+        # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8]
+        # print(f"Aca las deltas son: {deltas}")
+        # print(f"Cantidad deltas: {len(deltas)}")
+        # input("ENTER...")
+
+        for element in deltas_pesos_finales:
+            deltas.append(element)
+        # con esto obtengo [dw0, dw1, dw2, dw3, dw4, dw5, dw6, dw7, dw8, dw9, dw10, dw11, dw12]
+        # print(f"Cantidad deltas completa: {len(deltas)}")
+        # input("ENTER...")
+
+        for i, delta in enumerate(deltas):
+            pesos[i] = pesos[i] + delta
+        # con esto obtengo los nuevos valores de los pesos
+
+        # hago una copia de los nuevos pesos para poder manejarla
+        #w = pesos.copy()
+        # print(len(pesos))
 
 
 if __name__ == '__main__':
