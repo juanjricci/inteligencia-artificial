@@ -7,7 +7,10 @@ print(grey)
 rows, cols = grey.shape
 print(grey.shape)
 
-# for i in range(rows):
-#     for j in range(cols):
-#         k = img[i, j][0]
-#         print(k)
+lista = []
+
+for i in range(rows):
+    lista.append(1)
+    for j in range(cols):
+        k = img[i, j][0]
+        lista.append(k)

@@ -48,7 +48,9 @@ def menu(e1, e2, sd, bias, pesos, no):
 
 def main():
 
-    img = cv2.imread('images/persona0_grey/angry.png')
+    path = input("Ingrese el directorio de la imagen: ")
+
+    img = cv2.imread(path)
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     rows, cols = grey.shape
 
@@ -58,31 +60,19 @@ def main():
         for j in range(cols):
             imgarray0.append(img[i, j][0])
 
-    img2 = cv2.imread('images/persona1_grey/angry.png')
-    grey2 = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    rows, cols = grey2.shape
-
-    imgarray1 = []
-
-    for i in range(rows):
-        for j in range(cols):
-            imgarray1.append(img[i, j][0])
-            #print(k)
-
     #e1 = [0, 0, 1, 1] # x7680
     #e2 = [0, 1, 0, 1] # x7680
-  # x96
     #sd = [0, 1, 1, 0]
-    sd = [0, 1]
+    sd = 0
     bias = 1
 
     #no = 3# 4 --> prueba con una neurona mas (funciona)
 
     no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
-    cantidad_pesos = math.trunc((no * 13)/3)
+    cantidad_pesos = ((len(imgarray0) + 1) * no) + (no + 1)
 
     # aca se van a ir almacenando los errores en 4 listas distintas
-    errores = [[], [], [], []]
+    errores = 0
 
     #        w0   w1   w2   w3   w4   w5   w6    w7   w8    w9     w10   w11   w12
     #pesos = [0.9, 0.7, 0.5, 0.3, -0.9, -1, 0.8, 0.35, 0.1, -0.23, -0.79, 0.56, 0.6] #, -0.5, 0.2, -0.1, 0.15] #--> prueba con una neurona mas (funciona)
@@ -93,12 +83,12 @@ def main():
     # aca se va a ir almacenando una lista por cada peso sinoptico
     #              w0  w1  w2  w3  w4  w5  w6  w7  w8  w9 w10 w11 w12
     #lista_pesos = [[], [], [], [], [], [], [], [], [], [], [], [], []]# , [], [], [], []] #--> prueba con una neurona mas (funciona)
-    lista_pesos = []
-    for i in range(cantidad_pesos):
-        lista_pesos.append([])
+    # lista_pesos = []
+    # for i in range(cantidad_pesos):
+    #     lista_pesos.append([])
 
 
-    menu(imgarray0, imgarray1, sd, bias, pesos, no)
+    menu(imgarray0, sd, bias, pesos, no)
 
     lr = float(input("\n¿Que tasa de aprendizaje (learning rate) desea? --> "))
 
@@ -116,17 +106,18 @@ def main():
         iteraciones += 1
 
         # voy agregando los pesos a su lista correspondiente. ej: w0 se almacena en lista_pesos[0] 
-        for i, peso in enumerate(pesos):
-            lista_pesos[i].append(peso)
+        # for i, peso in enumerate(pesos):
+        #     lista_pesos[i].append(peso)
 
         #for cont in range(4):
-        for cont in range(len(imgarray0)):
+        for entrada in imgarray0:
 
             # hago una copia de los pesos para poder manejarla sin modificar la original
             w = pesos.copy()
 
             # while True:
-            entradas = [bias, imgarray0[cont], imgarray1[cont]]
+            entradas = [bias]
+            
 
             salidas = [] # esto va a almacenar las salidas de la capa oculta
             deltas_pesos_finales = [] # esto va a almacenar dw9, dw10, dw11 y dw12
