@@ -1,4 +1,3 @@
-from email.mime import image
 import random
 from numpy import exp
 import numpy as np
@@ -24,8 +23,6 @@ def main():
 
         for imagen in range(2):
 
-                  
-            #path = input("Ingrese el directorio de la imagen: ")
             path = f'images/persona{imagen}/{label}.jpg'
             print(f"Using image from {path}")
 
@@ -55,10 +52,6 @@ def main():
 
             entradas = [n for n in imgarray]
             primeros_pesos = [pesos[i] for i in range(len(entradas))]
-            # for i in range(len(entradas)):
-            #     primeros_pesos.append(pesos[i])
-            # print(f"Entradas = {len(entradas)}")
-            # input("ENTER...")
 
             inicio = time.time()
             times_printed = 0
@@ -74,9 +67,7 @@ def main():
                     print(f"Reached {printcounter * times_printed} itertions ({time_spent} seconds every {printcounter} iterations)")
                     printcounter = 0
                     inicio = time.time()
-                if iter == 1001:
-                    # final = time.time()
-                    # print(f"Termino en {final - inicio} segundos")
+                if iter == 101:
                     break
 
                 salidas = [bias]
@@ -92,20 +83,7 @@ def main():
                     if n == no:
                         break
 
-                    # x = 0
-                    # inicio = time.time()
                     x = sum(np.multiply(entradas, primeros_pesos))
-                    # print(otro)
-                    # print(len(otro))
-                    # input("Enter...")
-                    # x = sum(otro)
-                    #x = sum(entradas[k]*pesos[k] for k in entradas)
-                    # for element in entradas:
-                    #     x += element * pesos[aux]
-                    #     aux += 1
-                        # w.remove(w[0])
-                    # final = time.time()
-                    # print(f"Calcular x tardo {final - inicio} segundos")
         
                     y = 1/(1 + exp(-x))
                     # print(f"Salida = {y}")
@@ -114,15 +92,9 @@ def main():
                     # print(f"Cantidad de pesos restantes: {len(w)}")
                     n += 1
 
-                # entradas_temp = [bias]
-                # for s in salidas:
-                #     entradas_temp.append(s)
-                # inicio = time.time()
+                x = 0
                 for element in salidas: # aca la lista salidas contiene el bias mas las salidas de la capa oculta
                     x += element * pesos[aux]
-                    # w.remove(w[0])
-                # final = time.time()
-                # print(f"Calcular x (salida) tardo {final - inicio} segundos")
 
                 y = 1/(1 + exp(-x))
                 # print(f"Salida real = {y}")
@@ -134,47 +106,27 @@ def main():
                 if printcounter == 99:
                     print(f"Salida real = {y}")
                     print(f"Error = {error}")
-                # print(f"El error es {error}")
-                # agrego el error a su lista correspondiente al igual que la salida
-                #errores[cont].append(error)
-                #salidas_reales[cont] = y
 
                 delta_f = y * (1 - y) * error
-                # con esto obtengo el delta_f
-                # inicio = time.time()
+
                 deltas_pesos_finales = [lr * entrada * delta_f for entrada in salidas]
-                # final = time.time()
-                # print(f"Calcular deltas pesos finales tardo {final - inicio} segundos")
+
                 salidas.remove(salidas[0]) # remuevo el bias de la lista de salidas
-                # inicio = time.time()
+
                 deltas_ocultas = [salida * (1 - salida) * delta_f for salida in salidas]
-                # final = time.time()
-                # print(f"Calcular deltas ocultas tardo {final - inicio} segundos")
-                # print(f"Deltas ocultas: {len(deltas_ocultas)}")
-                # input("ENTER...")
 
-                # inicio = time.time()
                 deltas = [lr * entrada * delta_oculta for entrada, delta_oculta in zip(entradas, deltas_ocultas)]
-                # final = time.time()
-                # print(f"Calcular deltas tardo {final - inicio} segundos")
 
-                # for delta_oculta in deltas_ocultas:
-                #     deltas = [lr * entrada * delta_oculta for entrada in entradas]
-                # inicio = time.time()
                 deltas.extend(deltas_pesos_finales)
-                # final = time.time()
-                # print(f"Completar deltas tardo {final - inicio} segundos")
 
-                # inicio = time.time()
                 for i, delta in enumerate(deltas):
                     pesos[i] = pesos[i] + delta
                 final = time.time()
-                # print(f"Actualizar los pesos tardo {final - inicio} segundos")
             
             aux_imagenes += 1
 
     lista_iteraciones = []
-    lista_iteraciones.extend(range(0, 1000))
+    lista_iteraciones.extend(range(0, 100))
     plt.xlabel("Iteraciones")
     plt.ylabel("Errores")
     plt.title("GRÁFICO DE ERRORES")
@@ -182,7 +134,6 @@ def main():
     for cont in range(10):
         plt.plot(lista_iteraciones, errores[cont])
     plt.show()
-
 
 
 if __name__ == '__main__':
