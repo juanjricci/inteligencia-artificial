@@ -7,12 +7,14 @@ import cv2
 
 
 
-def calcular_salidas_imagenes_restantes(i, pesos):
+def calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters):
+
+    aux_iters += [iter]
 
     labels = ['serious', 'surprised', 'worried']
     lr = 0.5
     #no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
-    no = 100
+    no = 10
 
     for label in labels:
 
@@ -56,11 +58,41 @@ def calcular_salidas_imagenes_restantes(i, pesos):
 
             x = sum(np.multiply(salidas, ultimos_pesos))
             y = 1/(1 + exp(-x))
-            plt.scatter(i, y)
-            plt.pause(0.05)
+            if label == 'serious':
+                if imagen == 0:
+                    s[0].append(y)
+                elif imagen == 1:
+                    s[3].append(y)
+            if label == 'surprised':
+                if imagen == 0:
+                    s[1].append(y)
+                elif imagen == 1:
+                    s[4].append(y)
+            if label == 'worried':
+                if imagen == 0:
+                    s[2].append(y)
+                elif imagen == 1:
+                    s[5].append(y)
+
+    # print(s[0])
+    # input("Enter...")
+    plt.plot(aux_iters, s[0])
+    plt.plot(aux_iters, s[1])
+    plt.plot(aux_iters, s[2])
+    plt.plot(aux_iters, s[3])
+    plt.plot(aux_iters, s[4])
+    plt.plot(aux_iters, s[5])
+    plt.pause(0.01)
+    if iter == 100:
+        plt.clf()
+    # for n in range(6):
+    #     s[n].clear()
 
 
 def main():
+
+    s = [[], [], [], [], [], []]
+    aux_iters = []
 
     labels = ['angry', 'happy', 'joy', 'sad', 'serious_closed']
     errores = []
@@ -71,7 +103,7 @@ def main():
     
     lr = 0.5
     #no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
-    no = 100
+    no = 10
 
     pesos = []
 
@@ -154,7 +186,7 @@ def main():
                 error = sd - y
                 errores[aux_imagenes] += [error]
 
-                calcular_salidas_imagenes_restantes(iter, pesos)
+                calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters)
 
                 if printcounter == 99:
                     print(f"Salida real = {y}")
@@ -188,6 +220,23 @@ def main():
     for cont in range(10):
         plt.plot(lista_iteraciones, errores[cont])
     plt.show()
+
+    # plt.figure(figsize=(15,5))
+    # plt.subplot(1, 2, 1)
+    # plt.xlabel("Iteraciones")
+    # plt.ylabel("Errores")
+    # plt.title("GRÁFICO DE ERRORES")
+    # plt.axhline(y=0, color='black', linestyle='-')
+    # for cont in range(4):
+    #     plt.plot(lista_iteraciones, errores[cont])
+    # plt.subplot(1, 2, 2)
+    # plt.xlabel("Iteraciones")
+    # plt.ylabel("Pesos")
+    # plt.title("GRÁFICO DE PESOS")
+    # plt.axhline(y=0, color='black', linestyle='-')
+    # for i in range(6):
+    #     plt.plot(lista_iteraciones, s[i])
+    # plt.show()
 
 
 
