@@ -7,86 +7,86 @@ import cv2
 
 
 
-def calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters):
+def calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters, imagen):
 
     aux_iters += [iter]
 
     labels = ['serious', 'surprised', 'worried']
-    lr = 0.5
     #no = int(input("Ingrese la cantidad de neuronas en la capa oculta: "))
     no = 10
 
     for label in labels:
 
-        for imagen in range(2):
+        # for imagen in range(2):
 
-            path = f'images/persona{imagen}/{label}.jpg'
-            # print(f"Using image from {path}")
+        path = f'images/persona{imagen}/{label}.jpg'
+        # print(f"Using image from {path}")
 
-            img = cv2.imread(path)
-            grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            rows, cols = grey.shape
+        img = cv2.imread(path)
+        grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        rows, cols = grey.shape
 
-            imgarray = [1]
+        imgarray = [1]
 
-            for i in range(rows):
-                for j in range(cols):
-                    imgarray.append(img[i, j][0])
+        for i in range(rows):
+            for j in range(cols):
+                imgarray.append(img[i, j][0])
 
-            bias = 1
+        bias = 1
 
-            entradas = [n for n in imgarray]
+        entradas = [n for n in imgarray]
 
-            salidas = [bias]
+        salidas = [bias]
 
-            aux = 0
+        aux = 0
 
-            for _ in range(no):
+        for _ in range(no):
 
-                primeros_pesos = [pesos[i] for i in range(aux, aux + len(entradas))]
-                aux += len(entradas)
+            primeros_pesos = [pesos[i] for i in range(aux, aux + len(entradas))]
+            aux += len(entradas)
 
-                x = sum(np.multiply(entradas, primeros_pesos))
-    
-                y = 1/(1 + exp(-x))
+            x = sum(np.multiply(entradas, primeros_pesos))
 
-                salidas.append(y)
-
-
-            cantidad_ultimos_pesos = no + 1
-            ultimos_pesos = pesos[-cantidad_ultimos_pesos:]
-
-            x = sum(np.multiply(salidas, ultimos_pesos))
             y = 1/(1 + exp(-x))
-            if label == 'serious':
-                if imagen == 0:
-                    s[0].append(y)
-                elif imagen == 1:
-                    s[3].append(y)
-            if label == 'surprised':
-                if imagen == 0:
-                    s[1].append(y)
-                elif imagen == 1:
-                    s[4].append(y)
-            if label == 'worried':
-                if imagen == 0:
-                    s[2].append(y)
-                elif imagen == 1:
-                    s[5].append(y)
 
-    # print(s[0])
-    # input("Enter...")
-    plt.plot(aux_iters, s[0])
-    plt.plot(aux_iters, s[1])
-    plt.plot(aux_iters, s[2])
-    plt.plot(aux_iters, s[3])
-    plt.plot(aux_iters, s[4])
-    plt.plot(aux_iters, s[5])
+            salidas.append(y)
+
+
+        cantidad_ultimos_pesos = no + 1
+        ultimos_pesos = pesos[-cantidad_ultimos_pesos:]
+
+        x = sum(np.multiply(salidas, ultimos_pesos))
+        y = 1/(1 + exp(-x))
+        if label == 'serious':
+            if imagen == 0:
+                s[0].append(y)
+            elif imagen == 1:
+                s[3].append(y)
+        if label == 'surprised':
+            if imagen == 0:
+                s[1].append(y)
+            elif imagen == 1:
+                s[4].append(y)
+        if label == 'worried':
+            if imagen == 0:
+                s[2].append(y)
+            elif imagen == 1:
+                s[5].append(y)
+    
+    if imagen == 0:
+        plt.plot(aux_iters, s[0])
+        plt.plot(aux_iters, s[1])
+        plt.plot(aux_iters, s[2])
+    elif imagen == 1:
+        plt.plot(aux_iters, s[3])
+        plt.plot(aux_iters, s[4])
+        plt.plot(aux_iters, s[5])
     plt.pause(0.01)
+
     if iter == 100:
-        plt.clf()
-    # for n in range(6):
-    #     s[n].clear()
+        aux_iters.clear()
+        for n in range(6):
+            s[n].clear()
 
 
 def main():
@@ -185,8 +185,9 @@ def main():
                 # calculo el error
                 error = sd - y
                 errores[aux_imagenes] += [error]
-
-                calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters)
+                
+                if label == 'angry':
+                    calcular_salidas_imagenes_restantes(s, iter, pesos, aux_iters, imagen)
 
                 if printcounter == 99:
                     print(f"Salida real = {y}")
@@ -213,6 +214,7 @@ def main():
 
     lista_iteraciones = []
     lista_iteraciones.extend(range(0, 100))
+    plt.clf()
     plt.xlabel("Iteraciones")
     plt.ylabel("Errores")
     plt.title("GRÁFICO DE ERRORES")
